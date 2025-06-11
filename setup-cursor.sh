@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APPIMAGE="$HOME/cursor-app/Cursor-0.50.5-x86_64.AppImage" #Add your cursor app image link
+APPIMAGE="$HOME/cursor-app/Cursor-0.50.5-x86_64.AppImage"  # Path to your AppImage
 LAUNCHER_SCRIPT="$HOME/.local/bin/run-cursor.sh"
 DESKTOP_FILE="$HOME/.local/share/applications/cursor.desktop"
 ICON_SRC="$HOME/cursor-app/cursor-icon.png"
@@ -18,12 +18,12 @@ EOL
 chmod +x "$LAUNCHER_SCRIPT"
 
 # Step 3: Copy icon to system icon folder (requires sudo)
-sudo cp "$ICON_SRC" "$ICON_DEST"
+if [ -f "$ICON_SRC" ]; then
+    sudo cp "$ICON_SRC" "$ICON_DEST"
+    sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f -t
+fi
 
-# Step 4: Update icon cache (requires sudo)
-sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f -t
-
-# Step 5: Create .desktop file
+# Step 4: Create .desktop file
 mkdir -p "$(dirname "$DESKTOP_FILE")"
 cat > "$DESKTOP_FILE" <<EOL
 [Desktop Entry]
@@ -37,8 +37,9 @@ Categories=Development;
 EOL
 chmod +x "$DESKTOP_FILE"
 
-# Step 6: Update desktop database
+# Step 5: Update desktop database
 update-desktop-database ~/.local/share/applications/
 
-echo "Setup complete! Please log out and log back in, or reboot your PC."
+echo "✅ Setup complete! You can now search for 'Cursor' in your launcher."
+echo "🔁 If the icon doesn't appear, try logging out and back in or rebooting."
 
